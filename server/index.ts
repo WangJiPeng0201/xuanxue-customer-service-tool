@@ -107,7 +107,7 @@ async function handleBrainRun(req: express.Request, res: express.Response) {
   if (hasOpenAIConfig()) {
     try {
       result = await enrichWithOpenAI(brainRequest, baseResult);
-      provider = 'openai';
+      provider = 'llm';
     } catch (error) {
       result = {
         ...baseResult,
@@ -131,7 +131,7 @@ async function handleBrainRun(req: express.Request, res: express.Response) {
 
 app.get('/api/system/status', (_req, res) => {
   res.json({
-    aiProvider: hasOpenAIConfig() ? 'openai' : 'rules',
+    aiProvider: hasOpenAIConfig() ? 'llm' : 'rules',
     model: process.env.OPENAI_MODEL || process.env.LLM_MODEL || null,
     baseUrl: process.env.OPENAI_BASE_URL || process.env.LLM_BASE_URL || null,
   });

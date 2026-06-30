@@ -49,7 +49,7 @@ OPENAI_MODEL=deepseek-chat
 ```text
 OPENAI_API_KEY=你的 FreeModel Key
 OPENAI_BASE_URL=https://api.freemodel.dev/v1
-OPENAI_MODEL=后台显示的模型名
+OPENAI_MODEL=gpt-5.4-mini
 ```
 
 如果没有配置 Key，系统会自动使用规则兜底。

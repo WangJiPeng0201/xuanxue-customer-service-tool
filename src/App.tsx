@@ -156,7 +156,7 @@ function App() {
         </div>
         <div className="top-actions">
           <span className="ai-badge">
-            {systemStatus?.aiProvider === 'openai' ? `AI：${systemStatus.model}` : 'AI：规则兜底'}
+            {systemStatus?.aiProvider === 'llm' ? `AI：${systemStatus.model}` : 'AI：规则兜底'}
           </span>
           <button className="primary" onClick={() => void saveCustomer()} disabled={!canSave || isSaving}>
             {isSaving ? '保存中' : '保存客户'}
@@ -307,7 +307,7 @@ function App() {
             <div className="brain-result">
               <div className="insight-grid">
                 <Insight title="阶段" text={stageLabels[result.stage]} />
-                <Insight title="引擎" text={result.provider === 'openai' ? 'OpenAI API' : '规则兜底'} />
+                <Insight title="引擎" text={result.provider === 'llm' ? '模型 API' : '规则兜底'} />
                 <Insight title="来意" text={result.intent} />
                 <Insight title="心理" text={result.psychology} />
                 <Insight title="动作" text={result.recommendedAction} />
