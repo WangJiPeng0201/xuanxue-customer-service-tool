@@ -134,6 +134,7 @@ app.get('/api/system/status', (_req, res) => {
     aiProvider: hasOpenAIConfig() ? 'llm' : 'rules',
     model: process.env.OPENAI_MODEL || process.env.LLM_MODEL || null,
     baseUrl: process.env.OPENAI_BASE_URL || process.env.LLM_BASE_URL || null,
+    wireApi: process.env.OPENAI_WIRE_API || process.env.LLM_WIRE_API || 'chat',
   });
 });
 

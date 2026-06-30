@@ -87,9 +87,12 @@ function App() {
   const [conversation, setConversation] = useState('');
   const [result, setResult] = useState<BrainResult | null>(null);
   const [copied, setCopied] = useState('');
-  const [systemStatus, setSystemStatus] = useState<{ aiProvider: string; model: string | null; baseUrl?: string | null } | null>(
-    null,
-  );
+  const [systemStatus, setSystemStatus] = useState<{
+    aiProvider: string;
+    model: string | null;
+    baseUrl?: string | null;
+    wireApi?: string;
+  } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -156,7 +159,9 @@ function App() {
         </div>
         <div className="top-actions">
           <span className="ai-badge">
-            {systemStatus?.aiProvider === 'llm' ? `AI：${systemStatus.model}` : 'AI：规则兜底'}
+            {systemStatus?.aiProvider === 'llm'
+              ? `AI：${systemStatus.model} · ${systemStatus.wireApi}`
+              : 'AI：规则兜底'}
           </span>
           <button className="primary" onClick={() => void saveCustomer()} disabled={!canSave || isSaving}>
             {isSaving ? '保存中' : '保存客户'}

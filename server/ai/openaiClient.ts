@@ -29,15 +29,49 @@ export async function enrichWithOpenAI(request: BrainRequest, base: BrainResult)
   const model = process.env.OPENAI_MODEL || process.env.LLM_MODEL || 'deepseek-chat';
   const baseUrl = process.env.OPENAI_BASE_URL || process.env.LLM_BASE_URL || 'https://api.deepseek.com';
   const apiKey = process.env.OPENAI_API_KEY || process.env.LLM_API_KEY;
-  const endpoint = `${baseUrl.replace(/\/$/, '')}/chat/completions`;
-  const response = await fetch(endpoint, {
+  const wireApi = process.env.OPENAI_WIRE_API || process.env.LLM_WIRE_API || 'chat';
+  const userPayload = JSON.stringify(
+    {
+      action: request.action,
+      customer: request.customer ?? {},
+      conversation: request.conversation,
+      baseJudgement: base,
+    },
+    null,
+    2,
+  );
+
+  const response =
+    wireApi === 'responses'
+      ? await callResponsesApi({ apiKey, baseUrl, model, userPayload })
+      : await callChatCompletionsApi({ apiKey, baseUrl, model, userPayload });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`模型 API 调用失败：${response.status} ${detail}`);
+  }
+
+  const data = (await response.json()) as OpenAIResponse & ChatCompletionResponse;
+  const text = extractOutputText(data);
+  const parsed = parseModelJson(text) as Pick<BrainResult, 'intent' | 'psychology' | 'recommendedAction' | 'risk' | 'replies'>;
+
+  return {
+    ...base,
+    ...parsed,
+    replies: sanitizeReplies(parsed.replies, base.replies),
+  };
+}
+
+function callChatCompletionsApi(input: { apiKey?: string; baseUrl: string; model: string; userPayload: string }) {
+  const endpoint = `${normalizeV1BaseUrl(input.baseUrl)}/chat/completions`;
+  return fetch(endpoint, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `Bearer ${input.apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model,
+      model: input.model,
       messages: [
         {
           role: 'system',
@@ -45,36 +79,41 @@ export async function enrichWithOpenAI(request: BrainRequest, base: BrainResult)
         },
         {
           role: 'user',
-          content: JSON.stringify(
-            {
-              action: request.action,
-              customer: request.customer ?? {},
-              conversation: request.conversation,
-              baseJudgement: base,
-            },
-            null,
-            2,
-          ),
+          content: input.userPayload,
         },
       ],
       response_format: { type: 'json_object' },
     }),
   });
+}
 
-  if (!response.ok) {
-    const detail = await response.text();
-    throw new Error(`OpenAI API 调用失败：${response.status} ${detail}`);
-  }
+function callResponsesApi(input: { apiKey?: string; baseUrl: string; model: string; userPayload: string }) {
+  const endpoint = `${normalizeV1BaseUrl(input.baseUrl)}/responses`;
+  return fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${input.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: input.model,
+      input: [
+        {
+          role: 'system',
+          content: buildSystemPrompt(),
+        },
+        {
+          role: 'user',
+          content: input.userPayload,
+        },
+      ],
+    }),
+  });
+}
 
-  const data = (await response.json()) as OpenAIResponse & ChatCompletionResponse;
-  const text = extractOutputText(data);
-  const parsed = JSON.parse(text) as Pick<BrainResult, 'intent' | 'psychology' | 'recommendedAction' | 'risk' | 'replies'>;
-
-  return {
-    ...base,
-    ...parsed,
-    replies: sanitizeReplies(parsed.replies, base.replies),
-  };
+function normalizeV1BaseUrl(baseUrl: string) {
+  const clean = baseUrl.replace(/\/$/, '');
+  return clean.endsWith('/v1') ? clean : `${clean}/v1`;
 }
 
 function extractOutputText(data: OpenAIResponse & ChatCompletionResponse) {
@@ -88,6 +127,16 @@ function extractOutputText(data: OpenAIResponse & ChatCompletionResponse) {
     .join('\n');
   if (!text) throw new Error('OpenAI API 没有返回文本。');
   return text;
+}
+
+function parseModelJson(text: string) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('模型没有返回可解析的 JSON。');
+    return JSON.parse(match[0]);
+  }
 }
 
 function sanitizeReplies(
