@@ -1,0 +1,271 @@
+.app-shell {
+  min-height: 100vh;
+  background: #f6f3ee;
+  color: #231f1a;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 28px;
+  background: #19130f;
+  color: #fff8ea;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #d9b86f;
+  font-size: 13px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.top-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.ai-badge {
+  background: rgba(255, 248, 234, 0.12);
+  border: 1px solid rgba(217, 184, 111, 0.35);
+  border-radius: 999px;
+  color: #f4dfac;
+  font-size: 13px;
+  padding: 7px 11px;
+  white-space: nowrap;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 260px minmax(360px, 0.95fr) minmax(420px, 1.25fr);
+  gap: 14px;
+  padding: 14px;
+}
+
+.panel {
+  background: #fffdf8;
+  border: 1px solid #dfd5c4;
+  border-radius: 8px;
+  min-height: calc(100vh - 112px);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.status {
+  background: #efe5d0;
+  border-radius: 999px;
+  color: #6d4e1f;
+  font-size: 12px;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item {
+  background: #f8f1e4;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #2a2218;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px;
+  text-align: left;
+}
+
+.list-item span {
+  color: #806f5a;
+  font-size: 12px;
+}
+
+.list-item.active {
+  background: #24160f;
+  border-color: #d9b86f;
+  color: #fff8ea;
+}
+
+.list-item.active span {
+  color: #d8c7a9;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+label {
+  color: #5f5143;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  gap: 6px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+input,
+select,
+textarea {
+  background: #fffaf1;
+  border: 1px solid #d7cbb8;
+  border-radius: 7px;
+  box-sizing: border-box;
+  color: #241c15;
+  font: inherit;
+  min-height: 38px;
+  padding: 9px 10px;
+  width: 100%;
+}
+
+textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.conversation {
+  min-height: 170px;
+}
+
+button {
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primary {
+  background: #d7a843;
+  color: #1c130d;
+  font-weight: 700;
+  padding: 10px 16px;
+}
+
+.primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ghost {
+  background: #efe5d0;
+  color: #4a3520;
+  padding: 7px 10px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.action-grid button {
+  background: #2c2018;
+  color: #fff8ea;
+  min-height: 40px;
+}
+
+.brain-result {
+  margin-top: 14px;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.insight {
+  background: #f8f1e4;
+  border-radius: 7px;
+  padding: 10px;
+  text-align: left;
+}
+
+.insight span {
+  color: #8a6b38;
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.insight p,
+.reply p,
+.muted {
+  margin: 0;
+}
+
+.insight p {
+  color: #2c241b;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.reply-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.reply {
+  background: #fffaf1;
+  border: 1px solid #ded1bd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+}
+
+.reply-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.copy {
+  background: #e7dac4;
+  color: #372719;
+  padding: 6px 10px;
+}
+
+.muted {
+  color: #817462;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1180px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    min-height: auto;
+  }
+}
