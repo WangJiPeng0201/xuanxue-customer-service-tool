@@ -53,6 +53,15 @@ OPENAI_MODEL=gpt-5.5
 OPENAI_WIRE_API=responses
 ```
 
+如果后台显示你可使用 VIP SG 线路：
+
+```text
+OPENAI_API_KEY=你的 FreeModel Key
+OPENAI_BASE_URL=https://vip-sg.freemodel.dev
+OPENAI_MODEL=gpt-5.5
+OPENAI_WIRE_API=responses
+```
+
 如果没有配置 Key，系统会自动使用规则兜底。
 
 ## 当前模块
